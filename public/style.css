@@ -1,0 +1,21 @@
+/* ===== Footer (full-bleed) ===== */
+footer{
+  display:flex;
+  justify-content:center;         /* fine to leave */
+  align-items:center;
+  padding:0;                      /* remove extra padding that shows bg edges */
+  border-top:1px solid rgba(224, 221, 221, 0.08);
+  background:rgba(194, 180, 180, 0.2);
+}
+
+.foot{
+  width:100%;                     /* <-- full width */
+  max-width:none;                 /* remove the old min(980px,92%) cap */
+  border-radius:0;                /* no rounded corners */
+  border:0;                       /* remove side borders that made vertical lines */
+  color:#cfe3ff;
+  text-align:center;
+  padding:18px 24px;
+  box-shadow:none;                /* optional: no drop shadow for a flat bar */
+}
+

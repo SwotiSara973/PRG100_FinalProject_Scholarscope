@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submission Received — ScholarScope</title>
+  <style>
+    :root{
+      --bg1:#235f9e; --bg2:#49d1a3; --nav:#0a1c30;
+      --card:#0f1d48; --cardSoft:#0d1a3f; --line:#203066;
+      --text:#e8f1ff; --muted:#a6b3d1; --cta:#2f7bfd; --ctaHover:#2a6ee6;
+      --brand:#9fe8c6;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0; color:var(--text);
+      background:linear-gradient(135deg, var(--bg1) 20%, var(--bg2) 120%);
+      background-attachment:fixed;
+      display:flex; flex-direction:column;
+    }
+    /* Shared nav */
+    .nav{position:sticky; top:0; z-index:50; background:var(--nav);
+         border-bottom:1px solid rgba(255,255,255,.08)}
+    .nav-inner{max-width:1200px; margin:0 auto; padding:12px 16px;
+               display:flex; align-items:center; gap:18px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:#e8f1ff; text-decoration:none}
+    .brand svg{display:block}
+    .menu{display:flex; gap:18px; flex-wrap:wrap}
+    .menu a{color:#cfe3ff; text-decoration:none; padding:8px 10px; border-radius:10px; transition:background .15s, transform .06s}
+    .menu a:hover{background:#0f2a57; transform:translateY(-1px)}
+
+    /* Content */
+    .wrap{max-width:900px; margin:36px auto; padding:0 16px; width:100%}
+    .card{background:var(--card); border:1px solid #1b2d61; border-radius:18px; padding:24px;
+          box-shadow:0 16px 40px rgba(0,0,0,.22)}
+    .lead{font-size:22px; font-weight:800; margin:0 0 10px}
+    .muted{color:var(--muted)}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+    .btn{display:inline-block; background:var(--cta); color:#fff; font-weight:700; padding:10px 14px; border-radius:12px; text-decoration:none; border:0; cursor:pointer}
+    .btn:hover{background:var(--ctaHover)}
+    .ghost{background:#0c173a; border:1px solid #274088; color:#cfe3ff}
+
+    /* Footer */
+    footer{margin-top:auto; padding:24px 0; border-top:1px solid rgba(255,255,255,.08);
+           background:linear-gradient(135deg, var(--bg1), var(--bg2))}
+    .foot{max-width:1200px; margin:0 auto; padding:0 16px; color:#cfe3ff; text-align:center}
+  </style>
+</head>
+<body>
+  <!-- SAME NAV AS OTHER PAGES -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M8 24c0-9 6-16 16-16 10 0 16 7 16 16-4-3-9-4-16-4 0 9-3 16-9 20-5-3-7-8-7-16Z" fill="url(#g)"/>
+          <defs><linearGradient id="g" x1="8" y1="8" x2="40" y2="40">
+            <stop stop-color="#9fe8c6"/><stop offset="1" stop-color="#1ea97a"/></linearGradient></defs>
+        </svg>
+        ScholarScope
+      </a>
+      <nav class="menu">
+        <a href="/">Home</a>
+        <a href="/#about">About Us</a>
+        <a href="/#scholarships">Scholarships</a>
+        <a href="/#howto">How to Apply</a>
+        <a href="/#faqs">FAQs</a>
+        <a href="/#contact">Contact Us</a>
+        <a href="/login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card" role="status" aria-live="polite">
+      <div class="lead">🎉 Thank you! Your scholarship has been submitted.</div>
+      <p class="muted" id="msg">
+        You will receive an email shortly informing you whether it has been approved or not on our website.
+        In the meantime, we appreciate your patience.
+      </p>
+      <div class="actions">
+        <a class="btn" href="/college.html">View your submissions</a>
+        <a class="btn ghost" href="/">Go to Home</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot">© <span id="y"></span> ScholarScope — Built for students, colleges & NGOs.</div>
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Optional: if you sent ?title=... when redirecting, show it here.
+    const p = new URLSearchParams(location.search);
+    const t = p.get('title');
+    if (t) {
+      const m = document.getElementById('msg');
+      m.insertAdjacentHTML('beforeend', `<br><br><span>Submitted scholarship: <b>${t.replace(/</g,'&lt;')}</b></span>`);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScholarScope — Admin</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f6f8ff;color:#0b1432}
+    .nav{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#0b1432;color:#eaf1ff}
+    .nav a{color:#cfe3ff;text-decoration:none;margin-left:12px}
+    .wrap{max-width:1100px;margin:24px auto;padding:0 20px}
+    .card{background:#fff;border:1px solid #e6edff;border-radius:16px;padding:18px;box-shadow:0 8px 24px rgba(13,110,253,.08);margin-bottom:18px}
+    .muted{color:#667}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+    .item{border:1px solid #eef2ff;border-radius:14px;padding:12px}
+    button{padding:8px 10px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
+    .approve{background:#198754;color:#fff}
+    .reject{background:#dc3545;color:#fff}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #dbe3ff;margin-right:8px}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div>ScholarScopee — Admin</div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/student.html">Students</a>
+      <a href="/login.html">Login</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div id="who" class="pill">Checking…</div>
+      <h2 style="margin:10px 0 0">Pending Scholarships</h2>
+      <div class="muted" id="guard"></div>
+    </div>
+
+    <div class="card">
+      <div id="list" class="grid">
+        <div class="muted">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const whoEl = document.querySelector('#who');
+    const guard = document.querySelector('#guard');
+    const list  = document.querySelector('#list');
+
+    async function me(){
+      const r = await fetch('/api/auth/me', { cache: 'no-store' });
+      const { user } = await r.json();
+      if (!user){ whoEl.textContent = 'Not logged in'; guard.innerHTML = 'Please <a href="/login.html">log in</a> as an <b>admin</b>.'; return null; }
+      whoEl.textContent = `Logged in as ${user.name} (${user.role})`;
+      if (user.role !== 'admin'){ guard.textContent = 'Only admins can review scholarships.'; return null; }
+      guard.textContent = '';
+      return user;
+    }
+
+    async function loadPending(){
+      const r = await fetch('/api/scholarships?status=pending', { cache: 'no-store' });
+      if(!r.ok){ list.innerHTML = `<div class="muted">Error: ${await r.text()}</div>`; return; }
+      const { items=[] } = await r.json();
+      if(!items.length){ list.innerHTML = '<div class="muted">No pending items 🎉</div>'; return; }
+
+      list.innerHTML = items.map(s => `
+        <div class="item" data-id="${s._id}">
+          <div style="font-weight:700">${s.title}</div>
+          <div class="muted">${s.level} • ${s.faculty || 'General'} • min GPA ${s.minGPA ?? 0}</div>
+          ${s.activities ? `<div class="muted">Activities: ${s.activities}</div>` : ''}
+          ${s.criteria ? `<div class="muted">Criteria: ${s.criteria}</div>` : ''}
+          ${s.description ? `<div class="muted" style="margin-top:6px">${s.description}</div>` : ''}
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="approve">Approve</button>
+            <button class="reject">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    list.addEventListener('click', async (e) => {
+      const card = e.target.closest('.item'); if(!card) return;
+      const id = card.getAttribute('data-id');
+
+      if (e.target.classList.contains('approve')){
+        const r = await fetch(`/api/scholarships/${id}/approve`, { method:'PATCH' });
+        alert(r.ok ? 'Approved ✅' : `Failed: ${await r.text()}`);
+        if(r.ok) card.remove();
+      }
+      if (e.target.classList.contains('reject')){
+        const reason = prompt('Reason (optional):') || '';
+        const r = await fetch(`/api/scholarships/${id}/reject`, {
+          method:'PATCH',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ reason })
+        });
+        alert(r.ok ? 'Rejected ❌' : `Failed: ${await r.text()}`);
+        if(r.ok) card.remove();
+      }
+    });
+
+    (async () => {
+      const u = await me();
+      if (u) await loadPending();
+    })();
+  </script>
+</body>
+</html>

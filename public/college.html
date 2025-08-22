@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScholarScope — College/NGO Submit</title>
+  <style>
+    :root{
+      --bg1:#235f9e; --bg2:#49d1a3; --nav:#0a1c30;
+      --card:#0f1d48; --cardSoft:#0d1a3f; --line:#203066;
+      --text:#e8f1ff; --muted:#a6b3d1; --pill:#0c2a6e; --pillLine:#1c3c88;
+      --cta:#2f7bfd; --ctaHover:#2a6ee6; --ok:#9fe8c6; --err:#ff9aa2;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0; color:var(--text);
+      background:linear-gradient(135deg, var(--bg1) 20%, var(--bg2) 120%);
+      background-attachment:fixed;
+    }
+    /* Shared nav */
+    .nav{position:sticky; top:0; z-index:50; background:var(--nav);
+         border-bottom:1px solid rgba(255,255,255,.08)}
+    .nav-inner{max-width:1200px; margin:0 auto; padding:12px 16px;
+               display:flex; align-items:center; gap:18px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:#e8f1ff; text-decoration:none}
+    .brand svg{display:block}
+    .menu{display:flex; gap:18px; flex-wrap:wrap}
+    .menu a{color:#cfe3ff; text-decoration:none; padding:8px 10px; border-radius:10px; transition:background .15s, transform .06s}
+    .menu a:hover{background:#0f2a57; transform:translateY(-1px)}
+
+    /* Layout */
+    .wrap{max-width:900px; margin:24px auto; padding:0 16px}
+    .card{background:var(--card); border:1px solid #1b2d61; border-radius:18px; padding:18px;
+          box-shadow:0 16px 40px rgba(0,0,0,.22); margin-bottom:20px}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--pill);border:1px solid var(--pillLine);margin-right:8px}
+    .btn{display:inline-block; background:var(--cta); color:#fff; font-weight:700; padding:10px 14px; border-radius:12px; text-decoration:none; border:0; cursor:pointer}
+    .btn:hover{background:var(--ctaHover)}
+
+    /* Form + table (dark inputs) */
+    label{display:block;margin-top:10px;font-weight:600}
+    input,select,textarea,button{font:inherit}
+    input,select,textarea{width:100%;padding:10px;border:1px solid #274088;border-radius:10px;margin-top:6px;background:#0a1636;color:var(--text)}
+    textarea{min-height:110px}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{padding:10px;border-bottom:1px solid #1b2d61;text-align:left}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media (max-width:780px){.row{grid-template-columns:1fr}}
+
+    /* Success message block */
+    .success{
+      display:none;
+      background:#0c2f4e;
+      border:1px solid #1fb59f;
+      border-radius:14px;
+      padding:16px;
+      color:#d9fff2;
+      line-height:1.4;
+    }
+    .success h3{margin:0 0 6px; font-size:18px}
+    .success .small{font-size:.95rem; color:#bff2e6}
+
+    /* Footer */
+    footer{margin-top:32px; padding:24px 0; border-top:1px solid rgba(255,255,255,.08);
+           background:linear-gradient(135deg, var(--bg1), var(--bg2))}
+    .foot{max-width:1200px; margin:0 auto; padding:0 16px; color:#cfe3ff; text-align:center}
+  </style>
+</head>
+<body>
+  <!-- SAME NAV AS HOME -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M8 24c0-9 6-16 16-16 10 0 16 7 16 16-4-3-9-4-16-4 0 9-3 16-9 20-5-3-7-8-7-16Z" fill="url(#g)"/>
+          <defs><linearGradient id="g" x1="8" y1="8" x2="40" y2="40">
+            <stop stop-color="#9fe8c6"/><stop offset="1" stop-color="#1ea97a"/></linearGradient></defs>
+        </svg>
+        ScholarScope
+      </a>
+      <nav class="menu">
+        <a href="/">Home</a>
+        <a href="/#about">About Us</a>
+        <a href="/#scholarships">Scholarships</a>
+        <a href="/#howto">How to Apply</a>
+        <a href="/#faqs">FAQs</a>
+        <a href="/#contact">Contact Us</a>
+        <a href="/login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Submit card -->
+    <div class="card" id="submitCard">
+      <h1 style="margin:0 0 8px">College/NGO — Submit a Scholarship</h1>
+      <div class="pill" id="who">Checking role…</div>
+      <div id="guard" class="muted" style="margin-top:6px"></div>
+
+      <!-- success (hidden by default) -->
+      <div id="thanks" class="success" role="status" aria-live="polite" aria-hidden="true">
+        <h3>🎉Thank you! Your scholarship has been submitted. 
+            You will receive an email shortly informing you whether it has been approved or not on our website. 
+            In the meantime, we appreciate your patience.</h3>
+        <div class="small">
+          It’s now <b>pending review</b> by an Admin. You’ll receive an email once it’s approved or needs changes.
+          You can track it below in <b>Your Submissions</b>.
+        </div>
+      </div>
+
+      <!-- form -->
+      <form id="form" style="margin-top:10px">
+        <label>Title</label>
+        <input id="title" required placeholder="e.g., Kathmandu Merit Scholarship" />
+
+        <div class="row">
+          <div>
+            <label>Level</label>
+            <select id="level">
+              <option value="Bachelors">Bachelors</option>
+              <option value="Masters">Masters</option>
+            </select>
+          </div>
+          <div>
+            <label>Faculty</label>
+            <select id="faculty">
+              <option>IT</option><option>Education</option><option>HM</option>
+              <option>Management</option><option>Engineering</option><option>Science</option>
+              <option>Law</option><option>Medicine</option><option>Arts</option><option>Agriculture</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Minimum GPA (0–4)</label>
+            <input id="minGPA" type="number" min="0" max="4" step="0.01" value="0" />
+          </div>
+          <div>
+            <label>Deadline</label>
+            <input id="deadline" type="date" required />
+          </div>
+        </div>
+
+        <label>Organization (optional)</label>
+        <input id="org" placeholder="Your college/NGO name" />
+
+        <label>Eligibility / Criteria</label>
+        <textarea id="criteria" placeholder="Eligibility, required documents, etc."></textarea>
+
+        <label>Activities (ECAs, volunteering, etc.)</label>
+        <textarea id="activities" placeholder="List relevant activities students should have"></textarea>
+
+        <label>Description</label>
+        <textarea id="desc" placeholder="Benefits, how to apply..."></textarea>
+
+        <div style="margin-top:12px; display:flex; align-items:center; gap:10px;">
+          <button class="btn" type="submit">Submit for Review</button>
+          <span id="msg" class="muted" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Submissions card -->
+    <div class="card">
+      <h2>Your Submissions</h2>
+      <div class="muted">New items show as <b>pending</b> until an Admin approves.</div>
+      <table>
+        <thead>
+          <tr><th>Title</th><th>Level</th><th>Faculty</th><th>Deadline</th><th>Status</th></tr>
+        </thead>
+        <tbody id="mine"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="foot">© <span id="y"></span> ScholarScope — Built for students, colleges & NGOs.</div>
+  </footer>
+
+  <!-- Guard: must be COLLEGE -->
+  <script>
+  (async ()=>{
+    try{
+      const r = await fetch("/api/auth/me",{cache:"no-store",credentials:"same-origin"});
+      const {user} = await r.json();
+      if(!user){
+        location.assign(`/login.html?next=${encodeURIComponent(location.pathname)}`);
+        return;
+      }
+      if(user.role!=="college"){
+        const map={student:"/students.html",college:"/college.html",admin:"/admin.html"};
+        location.assign(map[user.role]||"/");
+        return;
+      }
+    }catch{
+      location.assign(`/login.html?next=${encodeURIComponent(location.pathname)}`);
+      return;
+    }
+  })();
+  </script>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const $ = s => document.querySelector(s);
+    const who = $("#who"), guard = $("#guard"), msg = $("#msg"), mine = $("#mine");
+    const formEl = $("#form");
+    const thanks = $("#thanks");
+    let currentUser = null;
+
+    async function me() {
+      const r = await fetch("/api/auth/me", {cache:"no-store", credentials:"same-origin"});
+      const {user} = await r.json();
+      if(!user){
+        who.textContent = "Not logged in";
+        guard.innerHTML = 'Please <a href="/login.html">log in</a> as <b>college</b>.';
+        formEl.style.display="none";
+      } else if(user.role!=="college"){
+        who.textContent = `Logged in as ${user.name} (${user.role})`;
+        guard.textContent = "Only college users can submit.";
+        formEl.style.display="none";
+      } else {
+        who.textContent = `Logged in as ${user.name} (college)`;
+        guard.textContent = "";
+        formEl.style.display="";
+        currentUser = user;
+      }
+      return user;
+    }
+
+    const fmt = d => { const dd=new Date(d); return isNaN(+dd)?'':dd.toLocaleDateString(); };
+
+    async function loadMine(){
+      const r = await fetch("/api/scholarships/mine",{cache:"no-store", credentials:"same-origin"});
+      if(!r.ok) return;
+      const {items=[]} = await r.json();
+      mine.innerHTML = items.map(x => `<tr>
+        <td>${x.title}</td><td>${x.level}</td><td>${x.faculty||""}</td><td>${fmt(x.deadline)}</td>
+        <td class="status">${x.status}</td>
+      </tr>`).join("") || `<tr><td colspan="5" class="muted">No submissions yet.</td></tr>`;
+    }
+
+    // Submit handler — hides form and shows thank-you
+    formEl.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      msg.textContent = "Submitting...";
+      try{
+        const payload = {
+          title: $("#title").value.trim(),
+          level: $("#level").value,
+          faculty: $("#faculty").value,
+          minGPA: Number($("#minGPA").value || 0),
+          org: $("#org").value.trim(),
+          deadline: $("#deadline").value,
+          criteria: $("#criteria").value.trim(),
+          activities: $("#activities").value.trim(),
+          description: $("#desc").value.trim()
+        };
+        const r = await fetch("/api/scholarships", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          credentials:"same-origin",
+          body: JSON.stringify(payload)
+        });
+        const text = await r.text();
+        let data = null; try{ data = JSON.parse(text);}catch{}
+
+        if(!r.ok) throw new Error((data&&data.errors&&data.errors[0]?.msg)||data?.message||text||"Failed");
+
+     const q = new URLSearchParams({ title: payload.title }).toString(); // optional
+location.assign(`/success.html?${q}`);
+
+        // optionally clear message after a while (leave visible if you prefer)
+        // setTimeout(()=>{ thanks.style.display="none"; }, 12000);
+      }catch(err){
+        msg.innerHTML = `<span style="color:var(--err)">${err.message}</span>`;
+      }
+    });
+
+    (async ()=>{ const u = await me(); if(u && u.role==="college"){ await loadMine(); } })();
+  </script>
+</body>
+</html>

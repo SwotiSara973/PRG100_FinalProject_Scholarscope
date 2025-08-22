@@ -1,0 +1,393 @@
+<!doctype html> 
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Cache-Control" content="no-store"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ScholarScope — Your gateway to scholarships</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== Theme ===== */
+    :root{
+      --bg1:#235f9e;          /* dark blue */
+      --bg2:#49d1a3;          /* light green */
+      --nav:#0a1c30;          /* nav bar color */
+      --card:#0f1d48;
+      --cardSoft:#0d1a3f;
+      --line:#203066;
+      --text:#e8f1ff;
+      --muted:#a6b3d1;
+      --pill:#0c2a6e;
+      --pillLine:#1c3c88;
+      --cta:#2f7bfd;
+      --ctaHover:#2a6ee6;
+      --brand:#9fe8c6;        /* green accent for logo */
+    }
+
+    /* ===== Base ===== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0;
+      color:var(--text);
+      background:linear-gradient(135deg, var(--bg1) 20%, var(--bg2) 120%);
+      background-attachment:fixed;
+    }
+    a{color:#cfe3ff;text-decoration:none}
+    a:hover{opacity:.9}
+
+    /* ===== Top Nav ===== */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      background:var(--nav);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .nav-inner{
+      max-width:1200px; margin:0 auto; padding:12px 16px;
+      display:flex; align-items:center; gap:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px;
+    }
+    .brand svg{display:block}
+    .spacer{flex:1}
+    .menu{display:flex; gap:18px; flex-wrap:wrap}
+    .menu a{
+      padding:8px 10px; border-radius:10px;
+      transition:background .15s, transform .06s;
+    }
+    .menu a:hover{background:#0f2a57; transform:translateY(-1px)}
+
+    /* ===== Shell ===== */
+    .wrap{max-width:1200px; margin:24px auto; padding:0 16px}
+
+    /* ===== Cards / Layout ===== */
+    .card{
+      background:var(--card); border:1px solid #d1d1d1;
+      border-radius:18px; padding:18px;
+      box-shadow:0 16px 40px rgba(0,0,0,.22);
+    }
+    .two{
+      display:grid; grid-template-columns:2fr 1fr; gap:18px; align-items:stretch;
+      margin-bottom:28px;
+    }
+    @media (max-width:980px){
+      .two{grid-template-columns:1fr; margin-bottom:20px;}
+    }
+    section.card + section.card{margin-top:18px}
+
+    /* ===== Lists ===== */
+    .grid{display:grid; grid-template-columns:1fr; gap:14px}
+    .item{
+      background:var(--cardSoft);
+      border:1px solid var(--line);
+      border-radius:14px; padding:12px;
+      transition:transform .08s, box-shadow .15s, border-color .15s;
+    }
+    .item:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+      border-color:#2b4aa1;
+    }
+    .muted{color:var(--muted)}
+
+    /* ===== Pills & Buttons ===== */
+    .pill{
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      background:var(--pill); border:1px solid var(--pillLine); margin-right:8px;
+    }
+    .btn{display:inline-block; background:var(--cta); color:#fff; font-weight:700;
+      padding:10px 14px; border-radius:12px; text-decoration:none}
+    .btn:hover{background:var(--ctaHover)}
+    button{font:inherit}
+
+    /* ===== “Start here” checklist ===== */
+    .check ul{margin:0; padding-left:20px}
+    .check li{margin:8px 0}
+
+    /* ===== Footer ===== */
+    footer{
+      margin-top:32px; padding:24px 0; border-top:1px solid rgba(255,255,255,.08);
+      background:rgba(201, 156, 156, 0.2)
+    }
+    .foot{max-width:1200px; margin:0 auto; padding:0 16px; color:#cfe3ff}
+  </style>
+</head>
+<body>
+  <!-- ===== NAV ===== -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <!-- simple leaf logo -->
+        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M8 24c0-9 6-16 16-16 10 0 16 7 16 16-4-3-9-4-16-4 0 9-3 16-9 20-5-3-7-8-7-16Z" fill="url(#g)"/>
+          <defs>
+            <linearGradient id="g" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#9fe8c6"/>
+              <stop offset="1" stop-color="#1ea97a"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        ScholarScope
+      </div>
+      <div class="spacer"></div>
+      <nav class="menu">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#scholarships">Scholarships</a>
+        <a href="#howto">How to Apply</a>
+        <a href="#faqs">FAQs</a>
+        <a href="#contact">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main id="home" class="wrap">
+    <!-- Latest + Start Here side-by-side -->
+    <div class="two">
+      <!-- LEFT: Latest -->
+      <section id="scholarships" class="card">
+        <h2 style="margin:0 0 8px">Latest Scholarships</h2>
+        <div id="latest" class="grid"></div>
+        <div id="empty" class="muted" style="display:none;margin-top:8px">No approved scholarships yet.</div>
+      </section>
+
+      <!-- RIGHT: Start here -->
+      <aside class="card check">
+        <h3 style="margin:0 0 8px">Start here</h3>
+        <p class="muted">Create an account to submit or apply.</p>
+        <p><a class="btn" href="/login.html">Sign up / Log in</a></p>
+        <ul class="muted" style="line-height:1.5">
+          <li>Colleges/NGOs: post a scholarship</li>
+          <li>Admins: review & approve</li>
+          <li>Students: browse & apply</li>
+        </ul>
+      </aside>
+    </div>
+
+    <!-- About -->
+    <section id="about" class="card">
+      <h2 style="margin:0 0 6px">About Us</h2>
+      <p class="muted" style="margin:0">
+        ScholarScope connects students with scholarships and helps colleges/NGOs promote opportunities.
+        Simple submission, quick review, and transparent eligibility.
+      </p>
+    </section>
+
+    <!-- How to apply -->
+    <section id="howto" class="card">
+      <h2 style="margin:0 0 6px">How to Apply</h2>
+      <ol class="muted" style="margin:0 0 6px 18px">
+        <li>Sign up / Log in</li>
+        <li>Filter Bachelor’s/Master’s + faculty + GPA</li>
+        <li>Open a scholarship and apply</li>
+        <li>Track your application in <a href="/my-applications.html">My Applications</a></li>
+      </ol>
+      <p class="muted" style="margin:0">Have a scholarship to post? <a href="/college.html">Submit here</a>.</p>
+    </section>
+
+    <!-- FAQs -->
+    <section id="faqs" class="card">
+      <h2 style="margin:0 0 8px">FAQs</h2>
+      <div class="item">
+        <strong>Is my data safe?</strong>
+        <div class="muted">We store only what’s required and never share your info without consent.</div>
+      </div>
+      <div class="item">
+        <strong>How long does approval take?</strong>
+        <div class="muted">New scholarships are reviewed by admins typically within 24–72 hours.</div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="card">
+      <h2 style="margin:0 0 6px">Contact Us</h2>
+      <p class="muted" style="margin:0">
+        Email: <a href="mailto:hello@scholarscope.example">hello@scholarscope.example</a>
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot">
+      © <span id="y"></span> ScholarScope — Built for students, colleges & NGOs.
+    </div>
+  </footer>
+
+  <script>
+    // year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Smooth-scroll for nav anchors
+    document.querySelectorAll('.menu a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+
+    // Render helper
+    function scholarshipCard(x){
+      const dd = new Date(x.deadline);
+      const date = isNaN(+dd) ? '' : dd.toLocaleDateString();
+      return `
+        <div class="item">
+          <div style="font-weight:700">${x.title}</div>
+          <div class="muted">
+            ${x.level} • ${x.faculty || "General"} • min GPA ${x.minGPA ?? 0}
+          </div>
+          ${date ? `<div class="muted">${date}</div>` : ``}
+        </div>
+      `;
+    }
+
+    // Util: sort newest by createdAt (fallback to deadline)
+    function sortNewest(items){
+      return items.slice().sort((a,b)=>{
+        const ca = new Date(a.createdAt||a.updatedAt||a.deadline||0).getTime();
+        const cb = new Date(b.createdAt||b.updatedAt||b.deadline||0).getTime();
+        return cb - ca;
+      });
+    }
+
+    async function loadLatest(){
+      const container = document.getElementById('latest');
+      const empty = document.getElementById('empty');
+
+      try{
+        // Ask API for only 4
+        const r = await fetch('/api/scholarships/latest?limit=4', { cache:'no-store' });
+        if(!r.ok) throw 0;
+        let { items = [] } = await r.json();
+
+        // Safety: if API ignores limit, sort & slice here
+        items = sortNewest(items).slice(0,4);
+
+        if(items.length){
+          empty.style.display='none';
+          container.innerHTML = items.map(scholarshipCard).join('');
+          return;
+        }
+
+        empty.style.display='block';
+        container.innerHTML = '';
+      }catch(err){
+        // Fallback: generic endpoint -> take newest 4
+        try{
+          const r2 = await fetch('/api/scholarships?status=approved', { cache:'no-store' });
+          const data2 = await r2.json();
+          let items = Array.isArray(data2.items) ? data2.items : [];
+          items = sortNewest(items).slice(0,4);
+          if(items.length){
+            document.getElementById('empty').style.display='none';
+            document.getElementById('latest').innerHTML = items.map(scholarshipCard).join('');
+            return;
+          }
+        }catch{}
+        // final minimal fallback
+        document.getElementById('latest').innerHTML = `
+          <div class="item">
+            <div style="font-weight:700">Sample Merit Scholarship</div>
+            <div class="muted">Bachelors • General • min GPA 3.0</div>
+            <div class="muted">${new Date().toLocaleDateString()}</div>
+          </div>
+        `;
+        document.getElementById('empty').style.display='none';
+      }
+    }
+
+    loadLatest();
+  </script>
+
+  <!-- (Unrelated login/signup helper from your snippet kept as-is, safe to remove if not needed) -->
+  <script>
+  (function(){
+    const $ = (s)=>document.querySelector(s);
+    const tabs = document.querySelectorAll('.tab');
+    const panes = { login: $('#loginPane'), signup: $('#signupPane') };
+    const status = $('#status'); const lMsg = $('#lMsg'); const sMsg = $('#sMsg');
+    const DEST = { student:'/student.html', college:'/college.html', admin:'/admin.html' };
+
+    function show(which){
+      if(!panes.login || !panes.signup) return; // page may not have these
+      tabs.forEach(t=>{
+        const active = t.dataset.tab === which;
+        t?.classList?.toggle('active', active);
+        t?.setAttribute?.('aria-selected', active ? 'true':'false');
+      });
+      panes.login?.classList?.toggle('active', which==='login');
+      panes.signup?.classList?.toggle('active', which==='signup');
+      if (location.hash !== '#'+which) history.replaceState(null,'','#'+which);
+    }
+
+    tabs.forEach?.(t=> t.addEventListener('click', ()=> show(t.dataset.tab)));
+    function openFromHash(){ const h = (location.hash||'#login').replace('#',''); show(h === 'signup' ? 'signup' : 'login'); }
+    window.addEventListener('hashchange', openFromHash);
+
+    async function getMe(){
+      try{
+        const r = await fetch('/api/auth/me', {cache:'no-store', credentials:'same-origin'});
+        const data = await r.json().catch(()=>null) || {};
+        return data.user || null;
+      }catch{ return null; }
+    }
+    function updateStatus(user){
+      if(!status) return;
+      if (user){
+        status.textContent = `Logged in as ${user.name} (${user.role})`;
+        status.style.borderColor = '#19b59e';
+        status.style.background = '#0c2f4e';
+      }else{
+        status.textContent = 'Not logged in';
+        status.style.borderColor = '#1c397e';
+        status.style.background = '#0b1a45';
+      }
+    }
+    function redirectFor(user){
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next');
+      if (next) { location.replace(next); return; }
+      const to = DEST[user?.role] || '/';
+      location.replace(to);
+    }
+
+    $('#loginForm')?.addEventListener('submit', async (e)=>{
+      e.preventDefault(); if(!lMsg) return; lMsg.textContent = 'Logging in…';
+      try{
+        const body = { email: $('#lEmail').value.trim(), password: $('#lPass').value };
+        const r = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin', body: JSON.stringify(body) });
+        const txt = await r.text(); let data=null; try{ data=JSON.parse(txt);}catch{}
+        if(!r.ok) throw new Error((data && data.message) || txt || 'Failed');
+        lMsg.innerHTML = '<span class="ok">Logged in ✔</span>';
+        const me = await getMe(); updateStatus(me); if (me) redirectFor(me);
+      }catch(err){ lMsg.innerHTML = `<span class="err">${err.message}</span>`; }
+    });
+
+    $('#logoutBtn')?.addEventListener('click', async ()=>{
+      try{ await fetch('/api/auth/logout', {method:'POST', credentials:'same-origin'}); lMsg && (lMsg.textContent = 'Logged out.'); const me = await getMe(); updateStatus(me);}catch{}
+    });
+
+    $('#signupForm')?.addEventListener('submit', async (e)=>{
+      e.preventDefault(); if(!sMsg) return; sMsg.textContent = 'Creating…';
+      try{
+        const body = { name: $('#sName').value.trim(), email: $('#sEmail').value.trim(), password: $('#sPass').value, role: $('#sRole').value };
+        const r = await fetch('/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin', body: JSON.stringify(body) });
+        const txt = await r.text(); let data=null; try{ data=JSON.parse(txt);}catch{}
+        if(!r.ok) throw new Error((data && (data.message || data.errors?.[0]?.msg)) || txt || 'Failed');
+        sMsg.innerHTML = '<span class="ok">Account created & logged in ✔</span>';
+        const me = await getMe(); updateStatus(me); if (me) redirectFor(me);
+      }catch(err){ sMsg.innerHTML = `<span class="err">${err.message}</span>`; }
+    });
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+    openFromHash();
+    getMe().then(updateStatus);
+  })();
+  </script>
+
+</body>
+</html>

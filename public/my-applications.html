@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScholarScope — My Applications</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f6f8ff;color:#0b1432}
+    .wrap{max-width:1000px;margin:28px auto;padding:0 20px}
+    .card{background:#fff;border:1px solid #e6edff;border-radius:16px;padding:18px;box-shadow:0 8px 24px rgba(13,110,253,.08);margin-bottom:18px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #dbe3ff;margin-right:8px}
+    .muted{color:#566}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eef2ff;text-align:left}
+    .status{font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div>
+        <a class="pill" href="/">← Home</a>
+        <a class="pill" href="/student.html">Students</a>
+        <a class="pill" href="/login.html">Login</a>
+        <span class="pill" id="who">Checking…</span>
+      </div>
+      <h1 style="margin:10px 0 0">My Applications</h1>
+      <div id="guard" class="muted" style="margin-top:6px"></div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Scholarship</th>
+            <th>Level / Faculty</th>
+            <th>Submitted</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="4" class="muted">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const who = document.querySelector("#who");
+    const guard = document.querySelector("#guard");
+    const rows = document.querySelector("#rows");
+
+    const fmtDateTime = (d)=> new Date(d).toLocaleString();
+
+    async function me() {
+      const r = await fetch("/api/auth/me", { cache: "no-store" });
+      const { user } = await r.json();
+      if (!user) {
+        who.textContent = "Not logged in";
+        guard.innerHTML = 'Please <a href="/login.html">log in</a> as a <b>student</b>.';
+        rows.innerHTML = '<tr><td colspan="4" class="muted">Not logged in.</td></tr>';
+        return null;
+      }
+      who.textContent = `Logged in as ${user.name} (${user.role})`;
+      if (user.role !== "student") {
+        guard.textContent = "Only students can view applications.";
+        rows.innerHTML = '<tr><td colspan="4" class="muted">Unauthorized (not a student).</td></tr>';
+        return null;
+      }
+      guard.textContent = "";
+      return user;
+    }
+
+    async function load() {
+      const r = await fetch("/api/applications/mine", { cache: "no-store" });
+      if (!r.ok) {
+        rows.innerHTML = `<tr><td colspan="4" class="muted">Error: ${await r.text()}</td></tr>`;
+        return;
+      }
+      const { items } = await r.json();
+      if (!items.length) {
+        rows.innerHTML = '<tr><td colspan="4" class="muted">You haven’t applied yet.</td></tr>';
+        return;
+      }
+      rows.innerHTML = items.map(a => `
+        <tr>
+          <td>${a.scholarship?.title || "(deleted)"} </td>
+          <td>${a.scholarship?.level || ""} / ${a.scholarship?.faculty || ""}</td>
+          <td>${fmtDateTime(a.createdAt)}</td>
+          <td class="status">${a.status}</td>
+        </tr>
+      `).join("");
+    }
+
+    (async () => {
+      const u = await me();
+      if (u) await load();
+    })();
+  </script>
+</body>
+</html>

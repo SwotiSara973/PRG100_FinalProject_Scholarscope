@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScholarScope — Students</title>
+  
+  <style>
+    :root{
+      --bg1:#235f9e; --bg2:#49d1a3; --nav:#0a1c30;
+      --card:#0f1d48; --cardSoft:#0d1a3f; --line:#203066;
+      --text:#e8f1ff; --muted:#a6b3d1; --pill:#0c2a6e; --pillLine:#1c3c88;
+      --cta:#2f7bfd; --ctaHover:#2a6ee6; --active:#132a66;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      display:flex; flex-direction:column; min-height:100vh;
+      margin:0; font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(135deg, var(--bg1) 20%, var(--bg2) 120%);
+      background-attachment:fixed;
+    }
+
+    /* NAV */
+    .nav{position:sticky; top:0; z-index:50; background:var(--nav); border-bottom:1px solid rgba(255,255,255,.08)}
+    .nav-inner{max-width:1200px; margin:0 auto; padding:12px 16px; display:flex; align-items:center}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:#e8f1ff; text-decoration:none; margin-right:20px}
+    .brand svg{display:block}
+    .menu{display:flex; gap:18px; flex-wrap:wrap}
+    .menu a{color:#cfe3ff; text-decoration:none; padding:8px 10px; border-radius:10px; transition:background .15s, transform .06s}
+    .menu a:hover{background:#0f2a57; transform:translateY(-1px)}
+
+    /* CONTENT */
+    main.wrap{max-width:1200px; margin:24px auto; padding:0 16px; width:100%; flex:1}
+    .card{background:var(--card); border:1px solid #1b2d61; border-radius:18px; padding:18px; box-shadow:0 16px 40px rgba(0,0,0,.22)}
+    .item{background:var(--cardSoft); border:1px solid var(--line); border-radius:14px; padding:12px; transition:transform .08s, box-shadow .15s, border-color .15s}
+    .item:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.25); border-color:#2b4aa1}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block; padding:6px 10px; border-radius:999px; background:var(--pill); border:1px solid var(--pillLine); margin-left:10px}
+    .btn{display:inline-block; background:var(--cta); color:#fff; font-weight:700; padding:10px 14px; border-radius:12px; text-decoration:none; border:0; cursor:pointer}
+    .btn:hover{background:var(--ctaHover)}
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    input,select,button{font:inherit}
+    input,select{padding:8px;border:1px solid #20408f;border-radius:10px;background:#0a1636;color:var(--text)}
+    footer{margin-top:32px; padding:24px 0; border-top:1px solid rgba(255,255,255,.08); background:linear-gradient(135deg, var(--bg1), var(--bg2))}
+    .foot{max-width:1200px; margin:0 auto; padding:0 16px; color:#cfe3ff; text-align:center}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M8 24c0-9 6-16 16-16 10 0 16 7 16 16-4-3-9-4-16-4 0 9-3 16-9 20-5-3-7-8-7-16Z" fill="url(#g)"/>
+          <defs><linearGradient id="g" x1="8" y1="8" x2="40" y2="40"><stop stop-color="#9fe8c6"/><stop offset="1" stop-color="#1ea97a"/></linearGradient></defs>
+        </svg>
+        ScholarScope
+      </a>
+      <!-- 👇 MENU aligned right -->
+      <nav class="menu" style="margin-left:auto">
+        <a href="/">Home</a>
+        <a href="/#about">About Us</a>
+        <a href="/#faqs">FAQs</a>
+        <a href="/#contact">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- FILTERS TOP -->
+    <div class="card">
+      <h2 style="margin:0">Find Scholarships</h2>
+      <div class="toolbar" style="margin-top:8px">
+        <div class="muted">Faculty:</div>
+        <select id="faculty">
+          <option value="">Any</option>
+          <option>IT</option><option>Education</option><option>HM</option>
+          <option>Management</option><option>Engineering</option><option>Science</option>
+          <option>Law</option><option>Medicine</option><option>Arts</option><option>Agriculture</option>
+        </select>
+
+        <div class="muted">Your GPA:</div>
+        <input id="gpa" type="number" min="0" max="4" step="0.01" placeholder="e.g., 3.2" />
+
+        <div class="muted">Level:</div>
+        <select id="level">
+          <option value="Bachelors" selected>Bachelor’s</option>
+          <option value="Masters">Master’s</option>
+        </select>
+
+        <button id="applyFilters" class="btn">Apply Filters</button>
+        <div id="tag" class="pill" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="card" style="margin-top:16px">
+      <h2 style="margin:0">Scholarships</h2>
+      <div id="list" style="margin-top:14px"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot">© <span id="y"></span> ScholarScope — Built for students, colleges & NGOs.</div>
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const list = document.querySelector("#list");
+    const tag = document.querySelector("#tag");
+    const gpaInput = document.querySelector("#gpa");
+    const facultySel = document.querySelector("#faculty");
+    const levelSel = document.querySelector("#level");
+
+    const norm = s => String(s||'').trim().toLowerCase().replace(/’/g,"'");
+
+    function fmt(d){ const dd=new Date(d); return isNaN(+dd) ? '' : dd.toLocaleDateString(); }
+
+    async function load(){
+      const fac   = facultySel.value;
+      const gpa   = Number(gpaInput.value);
+      const level = levelSel.value;
+
+      const params = new URLSearchParams();
+      params.set("level", level);
+      if (fac) params.set("faculty", fac);
+      if (!Number.isNaN(gpa) && gpa > 0) params.set("minGPA", gpa);
+
+      list.innerHTML = '<div class="muted">Loading…</div>';
+
+      try{
+        const r = await fetch(`/api/scholarships?${params.toString()}`, { cache: "no-store", credentials:"same-origin" });
+        const data = await r.json();
+        let items = Array.isArray(data.items) ? data.items : [];
+
+        // Safety filter
+        items = items.filter(x => norm(x.level) === norm(level));
+
+        tag.style.display = "inline-block";
+        tag.textContent = `${level}${fac ? " • " + fac : ""}${(gpa>0) ? " • GPA ≤ " + gpa : ""}`;
+
+        list.innerHTML = items.length ? items.map(x => `
+          <div class="item">
+            <div style="font-weight:700">${x.title}</div>
+            <div class="muted">
+              ${x.level} • ${x.faculty || "General"} • min GPA ${x.minGPA ?? 0}
+              ${x.location ? ` • ${x.location}` : ""} • deadline ${fmt(x.deadline)}
+            </div>
+            ${x.college ? `<div class="muted" style="margin-top:4px">College: ${x.college}</div>` : ""}
+            ${x.criteria ? `<div class="muted" style="margin-top:4px">Criteria: ${x.criteria}</div>` : ""}
+            ${x.activities ? `<div class="muted" style="margin-top:4px">Activities: ${x.activities}</div>` : ""}
+            ${x.description ? `<div style="margin-top:6px">${x.description}</div>` : ""}
+            <div style="margin-top:10px">
+              <button data-id="${x.id||x._id}" class="btn applyBtn">Apply</button>
+            </div>
+          </div>`).join("")
+        : '<div class="muted" style="margin-top:10px">No matching scholarships yet.</div>';
+      }catch(err){
+        list.innerHTML = `<div class="muted">Could not load scholarships. ${err?.message||""}</div>`;
+      }
+    }
+
+    document.querySelector("#list").addEventListener("click", async (e) => {
+      if (!e.target.classList.contains("applyBtn")) return;
+      const id = e.target.getAttribute("data-id");
+      const gpa = Number(gpaInput.value || 0);
+      const statement = prompt("Short statement (optional):") || "";
+      try{
+        const r = await fetch("/api/applications", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials:"same-origin",
+          body: JSON.stringify({ scholarshipId: id, gpa, statement })
+        });
+        const text = await r.text();
+        alert(r.ok ? "Applied ✔" : `Failed: ${text}`);
+      }catch(err){
+        alert("Failed: " + (err?.message||"Unknown error"));
+      }
+    });
+
+    document.querySelector("#applyFilters").addEventListener("click", load);
+    load();
+  </script>
+</body>
+</html>
